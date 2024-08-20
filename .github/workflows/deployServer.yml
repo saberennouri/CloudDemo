@@ -1,4 +1,4 @@
-name: Nodejs App CI/CD.
+name: Nodejs App CI/CD
 
 on:
   push:
@@ -31,7 +31,6 @@ jobs:
         docker tag cloudedemo-nodejs ${{ secrets.DOCKER_USERNAME }}/cloudedemo-nodejs:latest
         docker push ${{ secrets.DOCKER_USERNAME }}/cloudedemo-nodejs:latest
 
-
   deploy:
 
     runs-on: ubuntu-latest
@@ -43,11 +42,11 @@ jobs:
     - name: Deploy to ubuntuwebserver
       uses: appleboy/ssh-action@master
       with:
-        host: ${{ secrets.ubuntuwebserver }}
-        username: ${{ secrets.login }}
-        key: ${{ secrets.password }}
+        host: ubuntuwebserver
+        username: login
+        password: password
         script: |
-          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/clo-nodejs:latest
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/cloudedemo-nodejs:latest
           sudo docker stop cloudedemo-nodejs || true
           sudo docker rm cloudedemo-nodejs || true
           sudo docker run -d -p 3004:3000 --name=cloudedemo-nodejs ${{ secrets.DOCKER_USERNAME }}/cloudedemo-nodejs:latest
