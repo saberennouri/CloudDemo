@@ -32,18 +32,14 @@ jobs:
     needs: build-and-push
     steps:
     - name: Deploy to ubuntuwebserver
-          uses: appleboy/ssh-action@master
-          with:
-            host: ${{ secrets.SSH_HOST }}
-            username: ${{ secrets.SSH_USERNAME }}
-            password: ${{ secrets.SSH_PASSWORD }} 
-            port: 22
-            timeout: 60s  # Augmenter le timeout ici
-            command_timeout: 15m  # Augmenter le timeout pour les commandes exécutées
-            script: |
-              sudo docker pull ${{ secrets.DOCKER_USERNAME }}/cloudedemo-nodejs:latest
-              sudo docker stop cloudedemo-nodejs || true
-              sudo docker rm cloudedemo-nodejs || true
-              sudo docker run -d -p 3004:3000 --name=cloudedemo-nodejs ${{ secrets.DOCKER_USERNAME }}/cloudedemo-nodejs:latest
-              sudo docker ps
-
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        password: ${{ secrets.SSH_PASSWORD }} # Ou utilisez `key` si vous avez configuré une clé SSH
+        script: |
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/cloudedemo-nodejs:latest
+          sudo docker stop cloudedemo-nodejs || true
+          sudo docker rm cloudedemo-nodejs || true
+          sudo docker run -d -p 3004:3000 --name=cloudedemo-nodejs ${{ secrets.DOCKER_USERNAME }}/cloudedemo-nodejs:latest
+          sudo docker ps
