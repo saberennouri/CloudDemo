@@ -31,6 +31,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: build-and-push
     steps:
+    - name: Test network connectivity
+        run: ping -c 4 192.168.1.101
+
     - name: Deploy to ubuntuwebserver
       uses: appleboy/ssh-action@master
       with:
@@ -38,7 +41,9 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }}
         password: ${{ secrets.SSH_PASSWORD }} # Ou utilisez `key` si vous avez configuré une clé SSH
         port: 22
-        timeout: 60s
+        timeout: 120s  # Augmentez à 120 secondes
+        command_timeout: 15m  # Augmentez le timeout pour l'exécution des commandes
+   
         script: |
           sudo docker pull ${{ secrets.DOCKER_USERNAME }}/cloudedemo-nodejs:latest
           sudo docker stop cloudedemo-nodejs || true
