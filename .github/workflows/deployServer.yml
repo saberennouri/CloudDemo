@@ -33,9 +33,6 @@ jobs:
     needs: build-and-push
 
     steps:
-    - name: Test network connectivity
-      run: ping -c 4 192.168.1.101
-
     - name: Deploy to ubuntuwebserver
       uses: appleboy/ssh-action@master
       with:
@@ -43,8 +40,7 @@ jobs:
         username: ${{ secrets.SSH_USERNAME }} # saberdev
         password: ${{ secrets.SSH_PASSWORD }} # saberdev
         port: 22
-        timeout: 120s
-        command_timeout: 15m
+        
         script: |
           sudo docker pull ${{ secrets.DOCKER_USERNAME }}/cloudedemo-nodejs:latest
           sudo docker stop cloudedemo-nodejs || true
