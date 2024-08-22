@@ -37,6 +37,8 @@ jobs:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USERNAME }}
         password: ${{ secrets.SSH_PASSWORD }} # Ou utilisez `key` si vous avez configuré une clé SSH
+        port: 22
+        timeout: 60s
         script: |
           sudo docker pull ${{ secrets.DOCKER_USERNAME }}/cloudedemo-nodejs:latest
           sudo docker stop cloudedemo-nodejs || true
